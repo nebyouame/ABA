@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "autoname": "format: ABA-{device_name}",
+ "creation": "2024-03-07 22:00:18.091646",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "device_section",
+  "device_name",
+  "ip_address",
+  "user_name",
+  "password",
+  "column_break_ulcr",
+  "status",
+  "get_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "device_section",
+   "fieldtype": "Section Break",
+   "label": "Device"
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "IP Address ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "user_name",
+   "fieldtype": "Data",
+   "label": "User Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Data",
+   "label": "Password",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ulcr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Offline",
+   "fieldname": "status",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Online\nOffline"
+  },
+  {
+   "fieldname": "get_status",
+   "fieldtype": "Button",
+   "label": "Get Status"
+  },
+  {
+   "fieldname": "device_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-08 00:55:07.386983",
+ "modified_by": "Administrator",
+ "module": "biometric attendance",
+ "name": "Device",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
