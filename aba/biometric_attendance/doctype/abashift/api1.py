@@ -18,20 +18,21 @@ def exc_date(day):
     return switcher.get(day, 'Invalid choice')
 
 @frappe.whitelist()
-def update_absent_time_for_employees(device, start_date, end_date, start_time, time_to_wait, has_exceptional_day, e_day, e_start_time, e_time_to_wait):
+def update_absent_time_for_employees(device, start_date, end_date, start_time, time_to_wait, has_exceptional_day, e_day, e_start_time, e_time_to_wait, abashift_id):
     device_doc = frappe.db.get_value('Device', device, ['ip_address', 'user_name', 'password'])
     
     # # Retrieve all employees
-    employees = frappe.get_all('Employee', filters={'status': 'Active'}, fields=['name', 'attendance_device_id'])
+    employees = frappe.get_all('Employee', filters={'status': 'Active'}, fields=['name', 'attendance_device_id', 'shift_type'])
 
     for employee in employees:
+        if employee['shift_type'] == abashift_id:
         #employee_number = frappe.db.get_value('Employee', employee.first_name, 'attendance_device_id')
-        employee_number=employee['attendance_device_id']
-        print(employee_number)
-        absent_time = calculate_absent_time(device_doc, employee_number, start_date, end_date, start_time, time_to_wait, has_exceptional_day, e_day, e_start_time, e_time_to_wait)
-        
-        # # Update the specific field in the employee's doctype with the calculated absent time
-        frappe.db.set_value('Employee', employee['name'], 'absent_time', absent_time)
+            employee_number=employee['attendance_device_id']
+            print(employee_number)
+            absent_time = calculate_absent_time(device_doc, employee_number, start_date, end_date, start_time, time_to_wait, has_exceptional_day, e_day, e_start_time, e_time_to_wait)
+            
+            # # Update the specific field in the employee's doctype with the calculated absent time
+            frappe.db.set_value('Employee', employee['name'], 'absent_time', absent_time)
 
 def calculate_absent_time(device_doc, employee_number, start_date, end_date, start_time, time_to_wait, has_exceptional_day, e_day, e_start_time, e_time_to_wait):
     def attendance(Hikivision_Username, Hikivision_Password, Hikivision_IP, employeeNo, day):

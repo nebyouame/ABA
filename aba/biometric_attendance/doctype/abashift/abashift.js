@@ -18,6 +18,7 @@ frappe.ui.form.on("ABAshift", {
                 e_start_time: frm.doc.e_start_time,
                 e_end_time: frm.doc.e_end_time,
                 e_time_to_wait: frm.doc.e_time_to_wait,
+                abashift_id: frm.docname
             },
             callback: function(r) {
                 frappe.msgprint("Absent time set for all employees")
