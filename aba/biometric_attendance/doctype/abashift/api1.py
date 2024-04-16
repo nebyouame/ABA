@@ -24,6 +24,9 @@ def update_absent_time_for_employees(device, start_date, end_date, start_time, t
     # # Retrieve all employees
     employees = frappe.get_all('Employee', filters={'status': 'Active'}, fields=['name', 'attendance_device_id', 'shift_type'])
 
+    total_employees = len(employees)
+    processed_employees = 0
+
     for employee in employees:
         if employee['shift_type'] == abashift_id:
         #employee_number = frappe.db.get_value('Employee', employee.first_name, 'attendance_device_id')
@@ -31,8 +34,13 @@ def update_absent_time_for_employees(device, start_date, end_date, start_time, t
             print(employee_number)
             absent_time = calculate_absent_time(device_doc, employee_number, start_date, end_date, start_time, time_to_wait, has_exceptional_day, e_day, e_start_time, e_time_to_wait)
             
+            processed_employees += 1
+            update_progress(processed_employees, total_employees)
             # # Update the specific field in the employee's doctype with the calculated absent time
             frappe.db.set_value('Employee', employee['name'], 'absent_time', absent_time)
+
+    update_progress(total_employees, total_employees)
+    return ("Absent time set for all employees")
 
 def calculate_absent_time(device_doc, employee_number, start_date, end_date, start_time, time_to_wait, has_exceptional_day, e_day, e_start_time, e_time_to_wait):
     def attendance(Hikivision_Username, Hikivision_Password, Hikivision_IP, employeeNo, day):
@@ -108,3 +116,7 @@ def calculate_absent_time(device_doc, employee_number, start_date, end_date, sta
     rounded_count = round(count.total_seconds() / 3600, 1)
     print(rounded_count)
     return rounded_count
+
+def update_progress(processed, total):
+    progress = int((processed / total) * 100)
+    frappe.publish_progress(float(progress), ('Processing...'), 'info')

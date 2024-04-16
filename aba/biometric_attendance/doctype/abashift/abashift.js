@@ -21,7 +21,16 @@ frappe.ui.form.on("ABAshift", {
                 abashift_id: frm.docname
             },
             callback: function(r) {
-                frappe.msgprint("Absent time set for all employees")
+                if (r.message) {
+                    // Check if the message indicates progress
+                    if (r.message.progress !== undefined) {
+                        // Display progress in msgprint
+                        frappe.msgprint("Progress: " + r.message.progress + "%", "Processing...", "info");
+                    } else {
+                        // Display final message
+                        frappe.msgprint(r.message);
+                    }
+                }
                 // frm.set_value('status',r['message'])
             }
         });
