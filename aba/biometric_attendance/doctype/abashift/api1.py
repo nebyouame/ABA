@@ -89,32 +89,48 @@ def calculate_absent_time(device_doc, employee_number, start_date, end_date, sta
             if data:
                 start_time1 = datetime.strptime(start_time, '%H:%M:%S')
                 time_to_wait1 = datetime.strptime(time_to_wait, '%H:%M:%S')
-                
                 if has_exceptional_day:
-                    if weekDay == 7:
-                        weekDay = 0
+                    if weekDay >= 7:
+                        
+                        if start_date.weekday() == 6:
+                            print(start_date.weekday())
+                            weekDay = 0
+                        else:
+                            weekDay = 1
+                    print("exception: ",weekDay == exception_day)
+                    print("start_date",start_date)
+                    print("weekDay: ",weekDay)
                     if weekDay == exception_day:
                         start_time1 = datetime.strptime(e_start_time, '%H:%M:%S')
                         time_to_wait1 = datetime.strptime(e_time_to_wait, '%H:%M:%S')
-                        weekDay = weekDay - 7
+                        # weekDay = weekDay - 7
+                        # print("weekDay negative: ",weekDay)
                     
-                    weekDay = weekDay + 1
+                    
                     
                 compare_Time = start_time1 + (time_to_wait1 - datetime(1900, 1, 1))
                 compare_Time = datetime.strftime(compare_Time, '%H:%M:%S')
                 compare_Time = datetime.strptime(compare_Time, '%H:%M:%S').time()
                 checkIn_Time = datetime.fromisoformat(data).time()
+                print("compare_Time: ",compare_Time)
+                
                 if checkIn_Time > compare_Time:
-                    Scheduled_Time = time(8,0)
-                    final = datetime.combine(date.today(), checkIn_Time) - datetime.combine(date.today(), Scheduled_Time)
-                    count = count + final
+                    if weekDay == 0:
+                        start_date += delta
+                        weekDay = weekDay + 1
+                        next
+                    if checkIn_Time <= datetime.strptime("12:00:00", '%H:%M:%S').time():
+                        final = datetime.combine(date.today(), checkIn_Time) - datetime.combine(date.today(), start_time1.time())
+                        count = count + final
+                        print("count: ",count)
+                        print("final: ",final)
                 else:
                     pass
             else:
                 pass
         start_date += delta
+        weekDay = weekDay + 1
     rounded_count = round(count.total_seconds() / 3600, 1)
-    print(rounded_count)
     return rounded_count
 
 def update_progress(processed, total):
